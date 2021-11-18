@@ -139,11 +139,7 @@ class AlbumController extends AbstractActionController
     {
         $album = (int) $this->params()->fromRoute('id', null);
 
-        if (!$album) {
-            return $this->redirect()->toRoute('album');
-        }
-
-        $form = new TrackForm();
+        $form = new TrackForm($album);
         $form->get('submit')->setValue('Add');
         $form->get('album')->setValue($album);
 

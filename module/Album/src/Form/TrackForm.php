@@ -6,7 +6,7 @@ use Laminas\Form\Form;
 
 class TrackForm extends Form
 {
-    public function __construct($name = null)
+    public function __construct($album, $name = null)
     {
         parent::__construct('track');
 
@@ -17,6 +17,9 @@ class TrackForm extends Form
         $this->add([
             'name' => 'album',
             'type' => 'hidden',
+            'attributes' => [
+                'value' => $album,
+            ],
         ]);
         $this->add([
             'name' => 'title',
