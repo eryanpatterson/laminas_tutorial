@@ -2,17 +2,22 @@
 namespace Album\Controller;
 
 use Album\Model\AlbumTable;
+use Album\Model\TrackTable;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use Album\Form\AlbumForm;
+use Album\Form\TrackForm;
 use Album\Model\Album;
+use Album\Model\Track;
 
 class AlbumController extends AbstractActionController
 {
     private $table;
-    
-    public function __construct(AlbumTable $table) {
+    private $trackTable;
+
+    public function __construct(AlbumTable $table, TrackTable $trackTable) {
         $this->table = $table;
+        $this->trackTable = $trackTable;
     }
     
     public function indexAction()
@@ -20,7 +25,7 @@ class AlbumController extends AbstractActionController
        return new ViewModel([
             'albums' => $this->table->fetchAll(),
         ]);
-    }
+    }    
 
     public function addAction()
     {
@@ -113,5 +118,53 @@ class AlbumController extends AbstractActionController
                 'album' => $this->table->getAlbum($id),
             ];
     }
+
+    public function tracksAction()
+    {
+        $id = $this->params()->fromRoute('id', null);
+    
+        if (!$id) {
+            return $this->redirect()->toRoute('album');
+        } else {
+            $album = $this->table->getAlbum($id);
+            return new ViewModel([
+                'tracks' => $this->trackTable->fetchAlbum($id),
+                'album' => $album
+            ]);
+        }
+
+    }
+
+    public function newtrackAction()
+    {
+        $album = (int) $this->params()->fromRoute('id', null);
+
+        if (!$album) {
+            return $this->redirect()->toRoute('album');
+        }
+
+        $form = new TrackForm();
+        $form->get('submit')->setValue('Add');
+        $form->get('album')->setValue($album);
+
+        $request = $this->getRequest();
+
+        if (! $request->isPost()) {
+            return ['form' => $form, 'album' => $album];
+        }
+
+        $track = new Track();
+        $form->setInputFilter($track->getInputFilter());
+        $form->setData($request->getPost());
+
+        if (! $form->isValid()) {
+            return ['form' => $form, 'album' => $album];
+        }
+
+        $track->exchangeArray($form->getData());
+        $this->trackTable->saveTrack($track);
+        return $this->redirect()->toRoute('album');
+    }
+
 }
 ?>

@@ -1,0 +1,35 @@
+<?php
+if ($album) {
+    $title = $album->title;
+} else {
+    $title = 'My tracks';
+}
+$this->headTitle($title);
+
+?>
+<h1><?= $this->escapeHtml($title) ?></h1>
+<p>
+    <a href="<?= $this->url('album', ['action' => 'newtrack', 'id' => $album->id]) ?>">Add new track</a>
+</p>
+
+<table class="table">
+    <tr>
+        <th>Title</th>
+        <th>Artist</th>
+        <th>Album</th>
+        <th>Length</th>
+        <th>&nbsp;</th>
+    </tr>
+    <?php foreach ($tracks as $track) : ?>
+        <tr>
+            <td><?= $this->escapeHtml($track->title) ?></td>
+            <td><?= $this->escapeHtml($album->artist) ?></td>
+            <td><?= $this->escapeHtml($album->title) ?></td>
+            <td><?= $this->escapeHtml($track->length) ?></td>
+            <td>
+                <a href="<?= $this->url('album', ['action' => 'edit', 'id' => $track->id]) ?>">Edit</a>
+                <a href="<?= $this->url('album', ['action' => 'delete', 'id' => $track->id]) ?>">Delete</a>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+</table>

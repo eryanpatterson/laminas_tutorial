@@ -20,7 +20,7 @@ $this->headTitle($title);
             <td><?= $this->escapeHtml($album->title) ?></td>
             <td><?= $this->escapeHtml($album->artist) ?></td>
             <td>
-                <a href="<?= $this->url('track', ['album' => $album->title]) ?>">View</a>
+                <a href="<?= $this->url('album', ['action' => 'tracks', 'id' => $album->id]) ?>">View</a>
                 <a href="<?= $this->url('album', ['action' => 'edit', 'id' => $album->id]) ?>">Edit</a>
                 <a href="<?= $this->url('album', ['action' => 'delete', 'id' => $album->id]) ?>">Delete</a>
             </td>

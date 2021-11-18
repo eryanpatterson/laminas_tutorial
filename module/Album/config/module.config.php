@@ -25,20 +25,6 @@ return [
                     ],
                 ],
             ],
-            'track' => [
-                'type' => Segment::class,
-                'options' => [
-                    'route' => '/track[/:action[/:album[/:id]]]',
-                    'constraints' => [
-                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                        'id' => '[0-9]+',
-                    ],
-                    'defaults' => [
-                        'controller' => Controller\TrackController::class,
-                        'action' => 'index',
-                    ],
-                ],
-            ],
         ],    
     ],
 

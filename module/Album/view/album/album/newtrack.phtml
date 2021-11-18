@@ -11,14 +11,6 @@ $track = $form->get('title');
 $track->setAttribute('class', 'form-control');
 $track->setAttribute('placeholder', 'Track title');
 
-$artist = $form->get('artist');
-$artist->setAttribute('class', 'form-control');
-$artist->setAttribute('placeholder', 'Artist');
-
-$album = $form->get('album');
-$album->setAttribute('class', 'form-control');
-$album->setAttribute('placeholder', 'Album title');
-
 $length = $form->get('length');
 $length->setAttribute('class', 'form-control');
 $length->setAttribute('placeholder', 'Track length');
@@ -26,7 +18,9 @@ $length->setAttribute('placeholder', 'Track length');
 $submit = $form->get('submit');
 $submit->setAttribute('class', 'btn btn-primary');
 
-$form->setAttribute('action', $this->url('track', ['action' => 'add']));
+$form->setAttribute('action', $this->url('album', [
+    'action' => 'newtrack',
+]));
 $form->prepare();
 
 echo $this->form()->openTag($form);
@@ -38,18 +32,6 @@ echo $this->form()->openTag($form);
 </div>
 
 <div class="form-group">
-    <?= $this->formLabel($artist) ?>
-    <?= $this->formElement($artist) ?>
-    <?= $this->formElementErrors()->render($artist, ['class' => 'help-block']) ?>
-</div>
-
-<div class="form-group">
-    <?= $this->formLabel($album) ?>
-    <?= $this->formElement($album) ?>
-    <?= $this->formElementErrors()->render($album, ['class' => 'help-block']) ?>
-</div>
-
-<div class="form-group">
     <?= $this->formLabel($length) ?>
     <?= $this->formElement($length) ?>
     <?= $this->formElementErrors()->render($length, ['class' => 'help-block']) ?>
@@ -58,5 +40,6 @@ echo $this->form()->openTag($form);
 
 <?php
 echo $this->formHidden($form->get('id'));
+echo $this->formHidden($form->get('album'));
 echo $this->formSubmit($form->get('submit'));
 echo $this->form()->closeTag();

@@ -13,11 +13,11 @@ class TrackTable
     }
 
     public function fetchAll() {
-        return $this->tableGateway->select();
+        $tracks = $this->tableGateway->select();
     }
 
-    public function fetchAlbum($album) {
-        return $this->tableGateway->select(['album' => $album]);
+    public function fetchAlbum($id) {
+        return $this->tableGateway->select(['album' => $id]);
     }
 
     public function getTrack($id) {
@@ -36,7 +36,6 @@ class TrackTable
 
     public function saveTrack(Track $track) {
         $data = [
-            'artist' => $track->artist,
             'album' => $track->album,
             'title' => $track->title,
             'length' => $track->length,

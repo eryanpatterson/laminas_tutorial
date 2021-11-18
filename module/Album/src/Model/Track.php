@@ -14,17 +14,14 @@ use Laminas\Validator\StringLength;
 class Track implements InputFilterAwareInterface
 {
     public $id;
-    public $artist;
     public $title;
     public $album;
     public $length;
 
     private $inputFilter;
 
-    public function exchangeArray(array $data)
-    {
+    public function exchangeArray(array $data) {    
         $this->id = isset($data['id']) ? $data['id'] : null;
-        $this->artist = isset($data['artist']) ? $data['artist'] : null;
         $this->title = isset($data['title']) ? $data['title'] : null;
         $this->album = isset($data['album']) ? $data['album'] : null;
         $this->length = isset($data['length']) ? $data['length'] : null;
@@ -34,7 +31,6 @@ class Track implements InputFilterAwareInterface
     {
         return [
             'id' => $this->id,
-            'artist' => $this->artist,
             'title' => $this->title,
             'album' => $this->album,
             'length' => $this->length,
@@ -66,25 +62,6 @@ class Track implements InputFilterAwareInterface
         ]);
 
         $inputFilter->add([
-            'name' => 'artist',
-            'required' => true,
-            'filters' => [
-                ['name' => StripTags::class],
-                ['name' => StringTrim::class],
-            ],
-            'validators' => [
-                [
-                    'name' => StringLength::class,
-                    'options' => [
-                        'encoding' => 'UTF-8',
-                        'min' => 1,
-                        'max' => 100,
-                    ],
-                ],
-            ],
-        ]);
-
-        $inputFilter->add([
             'name' => 'title',
             'required' => true,
             'filters' => [
@@ -107,18 +84,7 @@ class Track implements InputFilterAwareInterface
             'name' => 'album',
             'required' => true,
             'filters' => [
-                ['name' => StripTags::class],
-                ['name' => StringTrim::class],
-            ],
-            'validators' => [
-                [
-                    'name' => StringLength::class,
-                    'options' => [
-                        'encoding' => 'UTF-8',
-                        'min' => 1,
-                        'max' => 100,
-                    ],
-                ],
+                ['name' => ToInt::class],
             ],
         ]);
 
