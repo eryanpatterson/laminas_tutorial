@@ -179,6 +179,7 @@ class AlbumController extends AbstractActionController
         $form = new TrackForm();
         $form->bind($track);
         $form->get('submit')->setAttribute('value', 'Edit');
+        $form->get('album')->setValue($track->album);
 
         $request = $this->getRequest();
         $viewData = ['id' => $id, 'form' => $form];

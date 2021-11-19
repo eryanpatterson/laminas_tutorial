@@ -6,7 +6,7 @@ use Laminas\Form\Form;
 
 class TrackForm extends Form
 {
-    public function __construct($album, $name = null)
+    public function __construct($name = null)
     {
         parent::__construct('track');
 
