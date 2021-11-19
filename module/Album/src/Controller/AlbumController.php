@@ -98,7 +98,7 @@ class AlbumController extends AbstractActionController
     {
             $id = (int) $this->params()->fromRoute('id', 0);
             if (!$id) {
-                return $this-redirect()->toRoute('album');
+                return $this->redirect()->toRoute('album');
             }
 
             $request = $this->getRequest();
@@ -160,6 +160,75 @@ class AlbumController extends AbstractActionController
         $track->exchangeArray($form->getData());
         $this->trackTable->saveTrack($track);
         return $this->redirect()->toRoute('album');
+    }
+
+    public function edittrackAction()
+    {
+        $id = (int) $this->params()->fromRoute('id', null);
+
+        if ($id === 0) {
+            return $this->redirect()->toRoute('album', ['action' => 'index']);
+        }
+
+        try {
+            $track = $this->trackTable->getTrack($id);
+        } catch (\Exception $e) {
+            return $this->redirect()->toRoute('album', ['action' => 'index']);
+        }
+
+        $form = new TrackForm();
+        $form->bind($track);
+        $form->get('submit')->setAttribute('value', 'Edit');
+
+        $request = $this->getRequest();
+        $viewData = ['id' => $id, 'form' => $form];
+
+        if (! $request->isPost()) {
+            return $viewData;
+        }
+
+        $form->setInputFilter($track->getInputFilter());
+        $form->setData($request->getPost());
+
+        if (! $form->isValid()) {
+            return $viewData;
+        }
+
+        $track->getArrayCopy();
+
+        try {
+            $this->trackTable->saveTrack($track);
+        } catch (\Exception $e) {
+        }
+
+        return $this->redirect()->toRoute('album', ['action' => 'tracks', 'id' => $track->album]);
+    }
+
+    public function deletetrackAction()
+    {
+        $id = (int) $this->params()->fromRoute('id', null);
+        if (!$id) {
+            return $this->redirect()->toRoute('album');
+        }
+
+        $track = $this->trackTable->getTrack($id);
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $del = $request->getPost('del', 'No');
+
+            if ($del == 'Yes') {
+                $id = (int) $request->getPost('id');
+                $this->trackTable->deleteTrack($id);
+            }
+
+            return $this->redirect()->toRoute('album', ['action' => 'tracks', 'id' => $track->album]);
+        }
+
+        return [
+            'id' => $id,
+            'track' => $track,
+        ];
     }
 
 }
