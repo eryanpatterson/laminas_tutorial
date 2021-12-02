@@ -22,13 +22,19 @@ class AlbumController extends AbstractActionController
     
     public function indexAction()
     {
-       return new ViewModel([
+        if (!$this->lmcUserAuthentication()->hasIdentity()) {
+            return $this->redirect()->toRoute('application');
+        }
+        return new ViewModel([
             'albums' => $this->table->fetchAll(),
         ]);
     }    
 
     public function addAction()
     {
+        if (!$this->lmcUserAuthentication()->hasIdentity()) {
+            return $this->redirect()->toRoute('application');
+        }
         $form = new AlbumForm();
         $form->get('submit')->setValue('Add');
 
@@ -53,6 +59,10 @@ class AlbumController extends AbstractActionController
 
     public function editAction()
     {
+        if (!$this->lmcUserAuthentication()->hasIdentity()) {
+            return $this->redirect()->toRoute('application');
+        }
+        
         $id = (int) $this->params()->fromRoute('id', 0);
 
         if (0 === $id) {
@@ -96,31 +106,35 @@ class AlbumController extends AbstractActionController
 
     public function deleteAction()
     {
-            $id = (int) $this->params()->fromRoute('id', 0);
-            if (!$id) {
-                return $this->redirect()->toRoute('album');
+        if (!$this->lmcUserAuthentication()->hasIdentity()) {
+            return $this->redirect()->toRoute('application');
+        }
+        
+        $id = (int) $this->params()->fromRoute('id', 0);
+        if (!$id) {
+            return $this->redirect()->toRoute('album');
+        }
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $del = $request->getPost('del', 'No');
+            if ($del == 'Yes') {
+                $id = (int) $request->getPost('id');
+                $this->table->deleteAlbum($id);
             }
-
-            $request = $this->getRequest();
-            if ($request->isPost()) {
-                $del = $request->getPost('del', 'No');
-
-                if ($del == 'Yes') {
-                    $id = (int) $request->getPost('id');
-                    $this->table->deleteAlbum($id);
-                }
-
-                return $this->redirect()->toRoute('album');
-            }
-
-            return [
-                'id' => $id,
-                'album' => $this->table->getAlbum($id),
-            ];
+            return $this->redirect()->toRoute('album');
+        }
+        return [
+            'id' => $id,
+            'album' => $this->table->getAlbum($id),
+        ];
     }
 
     public function tracksAction()
     {
+        if (!$this->lmcUserAuthentication()->hasIdentity()) {
+            return $this->redirect()->toRoute('application');
+        }
+
         $id = $this->params()->fromRoute('id', null);
     
         if (!$id) {
@@ -137,6 +151,10 @@ class AlbumController extends AbstractActionController
 
     public function newtrackAction()
     {
+        if (!$this->lmcUserAuthentication()->hasIdentity()) {
+            return $this->redirect()->toRoute('application');
+        }
+
         $album = (int) $this->params()->fromRoute('id', null);
 
         $form = new TrackForm($album);
@@ -164,6 +182,10 @@ class AlbumController extends AbstractActionController
 
     public function edittrackAction()
     {
+        if (!$this->lmcUserAuthentication()->hasIdentity()) {
+            return $this->redirect()->toRoute('application');
+        }
+        
         $id = (int) $this->params()->fromRoute('id', null);
 
         if ($id === 0) {
@@ -207,6 +229,10 @@ class AlbumController extends AbstractActionController
 
     public function deletetrackAction()
     {
+        if (!$this->lmcUserAuthentication()->hasIdentity()) {
+            return $this->redirect()->toRoute('application');
+        }
+        
         $id = (int) $this->params()->fromRoute('id', null);
         if (!$id) {
             return $this->redirect()->toRoute('album');
