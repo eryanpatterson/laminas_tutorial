@@ -21,6 +21,7 @@ return [
     'Laminas\DeveloperTools',
     'Application',
     'Album',
+    'Blog',
     'LmcUser',
 ];
 ?>
